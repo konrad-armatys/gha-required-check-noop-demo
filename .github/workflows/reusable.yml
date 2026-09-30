@@ -1,0 +1,16 @@
+name: Reusable build
+
+on:
+  workflow_call:
+    inputs:
+      build:
+        type: boolean
+        default: true
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    if: ${{ inputs.build }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "built"

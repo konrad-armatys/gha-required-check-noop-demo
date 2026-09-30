@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "lint ok"
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          if [ -f should-fail.txt ]; then
+            echo "should-fail.txt present -- simulating a real test failure"
+            exit 1
+          fi
+          echo "tests passed"
+
+  # This is the job configured as the required status check in branch
+  # protection. It depends on every job that should be able to block a
+  # merge. When nothing failed, the `if:` evaluates false *before* a
+  # runner is requested, so GitHub marks it "skipped" -- which branch
+  # protection treats as passing -- at zero compute cost. It only boots
+  # a runner (and fails) on the rare path where there's something to
+  # actually report.
+  required-gate:
+    needs: [lint, unit-tests]
+    if: always() && contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1

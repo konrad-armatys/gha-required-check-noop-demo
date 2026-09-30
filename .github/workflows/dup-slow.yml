@@ -1,0 +1,8 @@
+name: Dup slow
+on: pull_request
+jobs:
+  gate:
+    name: Gate
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 90; echo "slow -> fail"; [ "fail" = pass ]

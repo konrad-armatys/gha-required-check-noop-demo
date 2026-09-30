@@ -1,0 +1,8 @@
+name: Stub
+on: pull_request
+jobs:
+  stub:
+    name: app-a / Build and Push Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ok

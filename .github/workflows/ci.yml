@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Sleep (temp, for cancel test)
+        run: sleep 30
       - name: Run tests
         run: |
           if [ -f should-fail.txt ]; then

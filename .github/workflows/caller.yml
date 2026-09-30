@@ -1,0 +1,18 @@
+name: Caller
+
+on:
+  pull_request:
+
+jobs:
+  app-a:
+    name: app-a
+    if: contains(github.event.pull_request.title, '[build]')
+    uses: ./.github/workflows/reusable.yml
+
+  gate:
+    name: Gate
+    needs: [app-a]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ toJSON(needs.*.result) }}'

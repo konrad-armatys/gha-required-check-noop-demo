@@ -1,0 +1,11 @@
+name: Reusable build
+
+on:
+  workflow_call:
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "built"

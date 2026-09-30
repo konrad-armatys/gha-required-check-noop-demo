@@ -9,9 +9,16 @@ jobs:
     if: contains(github.event.pull_request.title, '[build]')
     uses: ./.github/workflows/reusable.yml
 
+  app-a-stub:
+    name: app-a / Build and Push Docker Image
+    if: ${{ !contains(github.event.pull_request.title, '[build]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "nothing to build"
+
   gate:
     name: Gate
-    needs: [app-a]
+    needs: [app-a, app-a-stub]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
